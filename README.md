@@ -17,7 +17,7 @@ Here's how you can add this server to your MCP client.
 
 ### Claude Desktop
 
-![Claude Desktop](./docs/img/claude-settings.png)
+![Claude Desktop](https://github.com/datastax/astra-db-mcp/raw/main/docs/img/claude-settings.png)
 
 To add this to [Claude Desktop](https://www.anthropic.com/news/claude-desktop), go to Preferences -> Developer -> Edit Config and add this JSON blob to `claude_desktop_config.json`:
 
@@ -38,7 +38,7 @@ To add this to [Claude Desktop](https://www.anthropic.com/news/claude-desktop), 
 
 ### Cursor
 
-![Cursor](./docs/img/cursor-settings.png)
+![Cursor](https://github.com/datastax/astra-db-mcp/raw/main/docs/img/cursor-settings.png)
 
 To add this to [Cursor](https://www.cursor.com/), go to Settings -> Cursor Settings -> MCP
 
