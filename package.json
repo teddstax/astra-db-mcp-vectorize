@@ -23,12 +23,12 @@
   "dependencies": {
     "@datastax/astra-db-ts": "^1.5.0",
     "@modelcontextprotocol/sdk": "^0.6.0",
+    "dotenv": "^16.4.7",
     "jsonschema": "^1.5.0"
   },
   "devDependencies": {
     "@modelcontextprotocol/inspector": "^0.4.1",
     "@types/node": "^20.17.23",
-    "dotenv": "^16.4.7",
     "esbuild": "^0.25.0",
     "rimraf": "^6.0.1",
     "typescript": "^5.3.3",
