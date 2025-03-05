@@ -1,0 +1,36 @@
+{
+  "name": "@datastax/astra-db-mcp",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "./build/index.js",
+  "bin": {
+    "astra-db-mcp": "./build/index.js"
+  },
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build:esbuild": "node esbuild.config.js",
+    "build": "node esbuild.config.js --prod",
+    "watch:esbuild": "node esbuild.config.js --watch",
+    "prepare": "npm run build",
+    "watch": "tsc --watch",
+    "inspector": "npx @modelcontextprotocol/inspector build/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@datastax/astra-db-ts": "^1.5.0",
+    "@modelcontextprotocol/sdk": "^0.6.0",
+    "jsonschema": "^1.5.0"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/inspector": "^0.4.1",
+    "@types/node": "^20.17.23",
+    "dotenv": "^16.4.7",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.6.1"
+  }
+}
