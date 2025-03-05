@@ -8,7 +8,8 @@
     "astra-db-mcp": "./build/index.js"
   },
   "files": [
-    "build"
+    "build",
+    "docs"
   ],
   "scripts": {
     "build:esbuild": "node esbuild.config.js",
