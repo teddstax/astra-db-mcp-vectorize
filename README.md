@@ -27,6 +27,10 @@ To add this to [Claude Desktop](https://www.anthropic.com/news/claude-desktop), 
     "astra-db-mcp": {
       "command": "npx",
       "args": ["-y", "@datastax/astra-db-mcp"]
+    },
+    "env": {
+      "ASTRA_DB_APPLICATION_TOKEN": "your_astra_db_token",
+      "ASTRA_DB_API_ENDPOINT": "your_astra_db_endpoint"
     }
   }
 }
