@@ -46,7 +46,11 @@ From there, you can add the server by clicking the "+ Add New MCP Server" button
 
 - Name: Whatever you want
 - Type: Command
-- Command: `env ASTRA_DB_APPLICATION_TOKEN=your_astra_db_token ASTRA_DB_API_ENDPOINT=your_astra_db_endpoint npx -y @datastax/astra-db-mcp`
+- Command:
+
+```sh
+env ASTRA_DB_APPLICATION_TOKEN=your_astra_db_token ASTRA_DB_API_ENDPOINT=your_astra_db_endpoint npx -y @datastax/astra-db-mcp
+```
 
 Once added, your editor will be fully connected to your Astra DB database.
 
