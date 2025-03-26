@@ -45,7 +45,7 @@ To add this to [Claude Desktop](https://www.anthropic.com/news/claude-desktop), 
 
 ```json
   "command": "cmd",
-  "args": ["/k", "npx", "-y", "@datastax/astra-db-mcp"], 
+  "args": ["/k", "npx", "-y", "@datastax/astra-db-mcp"],
 ```
 
 ### Cursor
@@ -54,12 +54,12 @@ To add this to [Claude Desktop](https://www.anthropic.com/news/claude-desktop), 
 
 To add this to [Cursor](https://www.cursor.com/), go to Settings -> Cursor Settings -> MCP
 
-From there, you can add the server by clicking the "+ Add New MCP Server" button, where you should be brought to an `mcp.json` file. 
+From there, you can add the server by clicking the "+ Add New MCP Server" button, where you should be brought to an `mcp.json` file.
 
-> **Tip**: there is a `~/.cursor/mcp.json` that represents your Global MCP settings, and a project-specific `.cursor/mcp.json` file 
+> **Tip**: there is a `~/.cursor/mcp.json` that represents your Global MCP settings, and a project-specific `.cursor/mcp.json` file
 > that is specific to the project. You probably want to install this MCP server into the project-specific file.
 
-Add the same JSON as indiciated in the Claude Desktop instructions. 
+Add the same JSON as indiciated in the Claude Desktop instructions.
 
 Alternatively you may be presented with a wizard, where you can enter the following values (for Unix-based systems):
 
@@ -86,3 +86,9 @@ The server provides the following tools for interacting with Astra DB:
 - `CreateRecord`: Create a new record in a collection
 - `UpdateRecord`: Update an existing record in a collection
 - `DeleteRecord`: Delete a record from a collection
+- `FindRecord`: Find records in a collection by field value
+- `BulkCreateRecords`: Create multiple records in a collection at once
+- `BulkUpdateRecords`: Update multiple records in a collection at once
+- `BulkDeleteRecords`: Delete multiple records from a collection at once
+- `OpenBrowser`: Open a web browser for authentication and setup
+- `HelpAddToClient`: Get assistance with adding Astra DB client to your MCP client
