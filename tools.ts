@@ -10,7 +10,10 @@ export type ToolName =
   | "CreateRecord"
   | "UpdateRecord"
   | "DeleteRecord"
-  | "FindRecord";
+  | "FindRecord"
+  | "BulkCreateRecords"
+  | "BulkUpdateRecords"
+  | "BulkDeleteRecords";
 
 type Tool = {
   name: ToolName;
@@ -196,7 +199,7 @@ export const tools: Tool[] = [
             "Field name to search by (e.g., 'title', '_id', or any property)",
         },
         value: {
-          type: ["string", "number", "boolean"],
+          type: "string",
           description: "Value to search for in the specified field",
         },
         limit: {
@@ -206,6 +209,80 @@ export const tools: Tool[] = [
         },
       },
       required: ["collectionName", "field", "value"],
+    },
+  },
+  {
+    name: "BulkCreateRecords",
+    description: "Create multiple records in a collection at once",
+    inputSchema: {
+      type: "object",
+      properties: {
+        collectionName: {
+          type: "string",
+          description: "Name of the collection to create the records in",
+        },
+        records: {
+          type: "array",
+          description: "Array of records to insert",
+          items: {
+            type: "object",
+          },
+        },
+      },
+      required: ["collectionName", "records"],
+    },
+  },
+  {
+    name: "BulkUpdateRecords",
+    description: "Update multiple records in a collection at once",
+    inputSchema: {
+      type: "object",
+      properties: {
+        collectionName: {
+          type: "string",
+          description: "Name of the collection containing the records",
+        },
+        records: {
+          type: "array",
+          description: "Array of records to update with their IDs",
+          items: {
+            type: "object",
+            properties: {
+              id: {
+                type: "string",
+                description: "ID of the record to update",
+              },
+              record: {
+                type: "object",
+                description: "The updated record data",
+              },
+            },
+            required: ["id", "record"],
+          },
+        },
+      },
+      required: ["collectionName", "records"],
+    },
+  },
+  {
+    name: "BulkDeleteRecords",
+    description: "Delete multiple records from a collection at once",
+    inputSchema: {
+      type: "object",
+      properties: {
+        collectionName: {
+          type: "string",
+          description: "Name of the collection containing the records",
+        },
+        recordIds: {
+          type: "array",
+          description: "Array of record IDs to delete",
+          items: {
+            type: "string",
+          },
+        },
+      },
+      required: ["collectionName", "recordIds"],
     },
   },
 ] as const satisfies {

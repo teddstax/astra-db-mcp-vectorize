@@ -3,7 +3,7 @@ import { db } from "../util/db.js";
 export async function FindRecord(params: {
   collectionName: string;
   field: string;
-  value: string | number | boolean;
+  value: string;
   limit?: number;
 }) {
   const { collectionName, field, value, limit = 10 } = params;
@@ -31,8 +31,8 @@ export async function FindRecord(params: {
   // Perform the search
   const results = await collection.find(query).limit(limit).toArray();
 
-  // If no results found with exact match, try partial text search for string values
-  if (results.length === 0 && typeof value === "string") {
+  // If no results found with exact match, try partial text search
+  if (results.length === 0) {
     try {
       // Create a regex pattern for partial matching
       // Escape special regex characters in the search value

@@ -17,6 +17,9 @@ import { CreateRecord } from "./tools/CreateRecord.js";
 import { UpdateRecord } from "./tools/UpdateRecord.js";
 import { DeleteRecord } from "./tools/DeleteRecord.js";
 import { FindRecord } from "./tools/FindRecord.js";
+import { BulkCreateRecords } from "./tools/BulkCreateRecords.js";
+import { BulkUpdateRecords } from "./tools/BulkUpdateRecords.js";
+import { BulkDeleteRecords } from "./tools/BulkDeleteRecords.js";
 
 const server = new Server(
   {
@@ -172,7 +175,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       const foundRecords = await FindRecord({
         collectionName: args.collectionName as string,
         field: args.field as string,
-        value: args.value as string | number | boolean,
+        value: args.value as string,
         limit: args.limit as number | undefined,
       });
       return {
@@ -183,6 +186,53 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
               foundRecords.length === 0
                 ? "No matching records found."
                 : JSON.stringify(foundRecords, null, 2),
+          },
+        ],
+      };
+
+    case "BulkCreateRecords":
+      const bulkCreateResult = await BulkCreateRecords({
+        collectionName: args.collectionName as string,
+        records: args.records as Record<string, any>[],
+      });
+      return {
+        content: [
+          {
+            type: "text",
+            text: `${
+              bulkCreateResult.message
+            }\nIDs: ${bulkCreateResult.ids.join(", ")}`,
+          },
+        ],
+      };
+
+    case "BulkUpdateRecords":
+      const bulkUpdateResult = await BulkUpdateRecords({
+        collectionName: args.collectionName as string,
+        records: args.records as Array<{
+          id: string;
+          record: Record<string, any>;
+        }>,
+      });
+      return {
+        content: [
+          {
+            type: "text",
+            text: bulkUpdateResult.message,
+          },
+        ],
+      };
+
+    case "BulkDeleteRecords":
+      const bulkDeleteResult = await BulkDeleteRecords({
+        collectionName: args.collectionName as string,
+        recordIds: args.recordIds as string[],
+      });
+      return {
+        content: [
+          {
+            type: "text",
+            text: bulkDeleteResult.message,
           },
         ],
       };
