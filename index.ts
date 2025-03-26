@@ -20,6 +20,8 @@ import { FindRecord } from "./tools/FindRecord.js";
 import { BulkCreateRecords } from "./tools/BulkCreateRecords.js";
 import { BulkUpdateRecords } from "./tools/BulkUpdateRecords.js";
 import { BulkDeleteRecords } from "./tools/BulkDeleteRecords.js";
+import { OpenBrowser } from "./tools/OpenBrowser.js";
+import { HelpAddToClient } from "./tools/HelpAddToClient.js";
 
 const server = new Server(
   {
@@ -46,199 +48,261 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const toolName = request.params.name as ToolName;
   const args = request.params.arguments || {};
 
-  switch (toolName) {
-    case "GetCollections":
-      const collections = await GetCollections();
+  try {
+    switch (toolName) {
+      case "GetCollections":
+        const collections = await GetCollections();
+        return {
+          content: [
+            {
+              type: "text",
+              text: collections.map((c) => c.name).join("\n"),
+            },
+          ],
+        };
+
+      case "CreateCollection":
+        const createResult = await CreateCollection({
+          collectionName: args.collectionName as string,
+          vector: args.vector as boolean | undefined,
+          dimension: args.dimension as number | undefined,
+        });
+        return {
+          content: [
+            {
+              type: "text",
+              text: createResult.message,
+            },
+          ],
+        };
+
+      case "UpdateCollection":
+        const updateResult = await UpdateCollection({
+          collectionName: args.collectionName as string,
+          newName: args.newName as string,
+        });
+        return {
+          content: [
+            {
+              type: "text",
+              text: updateResult.message,
+            },
+          ],
+        };
+
+      case "DeleteCollection":
+        const deleteResult = await DeleteCollection({
+          collectionName: args.collectionName as string,
+        });
+        return {
+          content: [
+            {
+              type: "text",
+              text: deleteResult.message,
+            },
+          ],
+        };
+
+      case "ListRecords":
+        const records = await ListRecords({
+          collectionName: args.collectionName as string,
+          limit: args.limit as number | undefined,
+        });
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(records, null, 2),
+            },
+          ],
+        };
+
+      case "GetRecord":
+        const record = await GetRecord({
+          collectionName: args.collectionName as string,
+          recordId: args.recordId as string,
+        });
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(record, null, 2),
+            },
+          ],
+        };
+
+      case "CreateRecord":
+        const createRecordResult = await CreateRecord({
+          collectionName: args.collectionName as string,
+          record: args.record as Record<string, any>,
+        });
+        return {
+          content: [
+            {
+              type: "text",
+              text: `${createRecordResult.message}\nID: ${createRecordResult.id}`,
+            },
+          ],
+        };
+
+      case "UpdateRecord":
+        const updateRecordResult = await UpdateRecord({
+          collectionName: args.collectionName as string,
+          recordId: args.recordId as string,
+          record: args.record as Record<string, any>,
+        });
+        return {
+          content: [
+            {
+              type: "text",
+              text: updateRecordResult.message,
+            },
+          ],
+        };
+
+      case "DeleteRecord":
+        const deleteRecordResult = await DeleteRecord({
+          collectionName: args.collectionName as string,
+          recordId: args.recordId as string,
+        });
+        return {
+          content: [
+            {
+              type: "text",
+              text: deleteRecordResult.message,
+            },
+          ],
+        };
+
+      case "FindRecord":
+        const foundRecords = await FindRecord({
+          collectionName: args.collectionName as string,
+          field: args.field as string,
+          value: args.value as string,
+          limit: args.limit as number | undefined,
+        });
+        return {
+          content: [
+            {
+              type: "text",
+              text:
+                foundRecords.length === 0
+                  ? "No matching records found."
+                  : JSON.stringify(foundRecords, null, 2),
+            },
+          ],
+        };
+
+      case "BulkCreateRecords":
+        const bulkCreateResult = await BulkCreateRecords({
+          collectionName: args.collectionName as string,
+          records: args.records as Record<string, any>[],
+        });
+        return {
+          content: [
+            {
+              type: "text",
+              text: `${
+                bulkCreateResult.message
+              }\nIDs: ${bulkCreateResult.ids.join(", ")}`,
+            },
+          ],
+        };
+
+      case "BulkUpdateRecords":
+        const bulkUpdateResult = await BulkUpdateRecords({
+          collectionName: args.collectionName as string,
+          records: args.records as Array<{
+            id: string;
+            record: Record<string, any>;
+          }>,
+        });
+        return {
+          content: [
+            {
+              type: "text",
+              text: bulkUpdateResult.message,
+            },
+          ],
+        };
+
+      case "BulkDeleteRecords":
+        const bulkDeleteResult = await BulkDeleteRecords({
+          collectionName: args.collectionName as string,
+          recordIds: args.recordIds as string[],
+        });
+        return {
+          content: [
+            {
+              type: "text",
+              text: bulkDeleteResult.message,
+            },
+          ],
+        };
+
+      case "OpenBrowser":
+        const openBrowserResult = await OpenBrowser({
+          url: args.url as string,
+        });
+        return {
+          content: [
+            {
+              type: "text",
+              text: openBrowserResult.message,
+            },
+          ],
+        };
+
+      case "HelpAddToClient":
+        const helpAddToClientResult = await HelpAddToClient();
+        return {
+          content: [
+            {
+              type: "text",
+              text: helpAddToClientResult.instructions,
+            },
+          ],
+        };
+
+      default:
+        throw new McpError(ErrorCode.MethodNotFound, "Tool not found");
+    }
+  } catch (error) {
+    console.error("Error executing tool:", error);
+
+    // Check if error is related to API endpoint or missing env vars
+    if (
+      error instanceof Error &&
+      (error.message.includes("ASTRA_DB_API_ENDPOINT") ||
+        error.message.includes("ASTRA_DB_APPLICATION_TOKEN") ||
+        error.message.includes("Invalid URL") ||
+        error.message.includes("Failed to fetch") ||
+        error.message.includes("Network error") ||
+        !process.env.ASTRA_DB_API_ENDPOINT ||
+        !process.env.ASTRA_DB_APPLICATION_TOKEN)
+    ) {
+      // Open browser for configuration
       return {
         content: [
           {
             type: "text",
-            text: collections.map((c) => c.name).join("\n"),
+            text: "It seems like you haven't configured your Astra DB credentials. Would you like me to open the Astra DB dashboard for you so you can sign up and get your credentials?",
           },
         ],
       };
+    }
 
-    case "CreateCollection":
-      const createResult = await CreateCollection({
-        collectionName: args.collectionName as string,
-        vector: args.vector as boolean | undefined,
-        dimension: args.dimension as number | undefined,
-      });
-      return {
-        content: [
-          {
-            type: "text",
-            text: createResult.message,
-          },
-        ],
-      };
-
-    case "UpdateCollection":
-      const updateResult = await UpdateCollection({
-        collectionName: args.collectionName as string,
-        newName: args.newName as string,
-      });
-      return {
-        content: [
-          {
-            type: "text",
-            text: updateResult.message,
-          },
-        ],
-      };
-
-    case "DeleteCollection":
-      const deleteResult = await DeleteCollection({
-        collectionName: args.collectionName as string,
-      });
-      return {
-        content: [
-          {
-            type: "text",
-            text: deleteResult.message,
-          },
-        ],
-      };
-
-    case "ListRecords":
-      const records = await ListRecords({
-        collectionName: args.collectionName as string,
-        limit: args.limit as number | undefined,
-      });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(records, null, 2),
-          },
-        ],
-      };
-
-    case "GetRecord":
-      const record = await GetRecord({
-        collectionName: args.collectionName as string,
-        recordId: args.recordId as string,
-      });
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(record, null, 2),
-          },
-        ],
-      };
-
-    case "CreateRecord":
-      const createRecordResult = await CreateRecord({
-        collectionName: args.collectionName as string,
-        record: args.record as Record<string, any>,
-      });
-      return {
-        content: [
-          {
-            type: "text",
-            text: `${createRecordResult.message}\nID: ${createRecordResult.id}`,
-          },
-        ],
-      };
-
-    case "UpdateRecord":
-      const updateRecordResult = await UpdateRecord({
-        collectionName: args.collectionName as string,
-        recordId: args.recordId as string,
-        record: args.record as Record<string, any>,
-      });
-      return {
-        content: [
-          {
-            type: "text",
-            text: updateRecordResult.message,
-          },
-        ],
-      };
-
-    case "DeleteRecord":
-      const deleteRecordResult = await DeleteRecord({
-        collectionName: args.collectionName as string,
-        recordId: args.recordId as string,
-      });
-      return {
-        content: [
-          {
-            type: "text",
-            text: deleteRecordResult.message,
-          },
-        ],
-      };
-
-    case "FindRecord":
-      const foundRecords = await FindRecord({
-        collectionName: args.collectionName as string,
-        field: args.field as string,
-        value: args.value as string,
-        limit: args.limit as number | undefined,
-      });
-      return {
-        content: [
-          {
-            type: "text",
-            text:
-              foundRecords.length === 0
-                ? "No matching records found."
-                : JSON.stringify(foundRecords, null, 2),
-          },
-        ],
-      };
-
-    case "BulkCreateRecords":
-      const bulkCreateResult = await BulkCreateRecords({
-        collectionName: args.collectionName as string,
-        records: args.records as Record<string, any>[],
-      });
-      return {
-        content: [
-          {
-            type: "text",
-            text: `${
-              bulkCreateResult.message
-            }\nIDs: ${bulkCreateResult.ids.join(", ")}`,
-          },
-        ],
-      };
-
-    case "BulkUpdateRecords":
-      const bulkUpdateResult = await BulkUpdateRecords({
-        collectionName: args.collectionName as string,
-        records: args.records as Array<{
-          id: string;
-          record: Record<string, any>;
-        }>,
-      });
-      return {
-        content: [
-          {
-            type: "text",
-            text: bulkUpdateResult.message,
-          },
-        ],
-      };
-
-    case "BulkDeleteRecords":
-      const bulkDeleteResult = await BulkDeleteRecords({
-        collectionName: args.collectionName as string,
-        recordIds: args.recordIds as string[],
-      });
-      return {
-        content: [
-          {
-            type: "text",
-            text: bulkDeleteResult.message,
-          },
-        ],
-      };
-
-    default:
-      throw new McpError(ErrorCode.MethodNotFound, "Tool not found");
+    // For other errors, return the error message
+    return {
+      content: [
+        {
+          type: "text",
+          text: `Error: ${
+            error instanceof Error ? error.message : String(error)
+          }`,
+        },
+      ],
+    };
   }
 });
 

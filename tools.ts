@@ -13,7 +13,9 @@ export type ToolName =
   | "FindRecord"
   | "BulkCreateRecords"
   | "BulkUpdateRecords"
-  | "BulkDeleteRecords";
+  | "BulkDeleteRecords"
+  | "OpenBrowser"
+  | "HelpAddToClient";
 
 type Tool = {
   name: ToolName;
@@ -283,6 +285,29 @@ export const tools: Tool[] = [
         },
       },
       required: ["collectionName", "recordIds"],
+    },
+  },
+  {
+    name: "OpenBrowser",
+    description: "Open a web browser to a specific URL",
+    inputSchema: {
+      type: "object",
+      properties: {
+        url: {
+          type: "string",
+          description: "The URL to open in the browser",
+        },
+      },
+      required: ["url"],
+    },
+  },
+  {
+    name: "HelpAddToClient",
+    description: "Help the user add the Astra DB client to their MCP client",
+    inputSchema: {
+      type: "object",
+      properties: {},
+      required: [],
     },
   },
 ] as const satisfies {
