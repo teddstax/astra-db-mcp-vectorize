@@ -36,6 +36,7 @@ import { BulkUpdateRecords } from "./tools/BulkUpdateRecords.js";
 import { BulkDeleteRecords } from "./tools/BulkDeleteRecords.js";
 import { OpenBrowser } from "./tools/OpenBrowser.js";
 import { HelpAddToClient } from "./tools/HelpAddToClient.js";
+import { EstimateDocumentCount } from "./tools/EstimateDocumentCount.js";
 
 const server = new Server(
   {
@@ -86,6 +87,19 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             {
               type: "text",
               text: createResult.message,
+            },
+          ],
+        };
+
+      case "EstimateDocumentCount":
+        const count = await EstimateDocumentCount({
+          collectionName: args.collectionName as string,
+        });
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Estimated document count in "${args.collectionName}": ${count}`,
             },
           ],
         };

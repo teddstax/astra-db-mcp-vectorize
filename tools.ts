@@ -29,7 +29,8 @@ export type ToolName =
   | "BulkUpdateRecords"
   | "BulkDeleteRecords"
   | "OpenBrowser"
-  | "HelpAddToClient";
+  | "HelpAddToClient"
+  | "EstimateDocumentCount";
 
 type Tool = {
   name: ToolName;
@@ -313,6 +314,20 @@ export const tools: Tool[] = [
         },
       },
       required: ["url"],
+    },
+  },
+  {
+    name: "EstimateDocumentCount",
+    description: "Estimate the number of documents in a collection using a fast, approximate count method",
+    inputSchema: {
+      type: "object",
+      properties: {
+        collectionName: {
+          type: "string",
+          description: "Name of the collection to estimate document count for",
+        },
+      },
+      required: ["collectionName"],
     },
   },
   {

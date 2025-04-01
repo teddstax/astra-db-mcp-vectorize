@@ -92,3 +92,4 @@ The server provides the following tools for interacting with Astra DB:
 - `BulkDeleteRecords`: Delete multiple records from a collection at once
 - `OpenBrowser`: Open a web browser for authentication and setup
 - `HelpAddToClient`: Get assistance with adding Astra DB client to your MCP client
+- `EstimateDocumentCount`: Get estimate of the number of documents in a collection.
