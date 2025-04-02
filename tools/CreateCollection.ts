@@ -72,8 +72,8 @@ export async function CreateCollection({
 
     console.log(`Successfully created collection: ${collection.collectionName}`);
     return collection;
-  } catch (error) {
-    console.error(`Failed to create collection: ${error.message}`);
+  } catch (error: unknown) {
+    console.error(`Failed to create collection: ${error instanceof Error ? error.message : String(error)}`);
     throw error;
   }
 }

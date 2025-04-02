@@ -50,7 +50,7 @@ export const tools: Tool[] = [
   },
   {
     name: "CreateCollection",
-    description: "Create a new collection in the database",
+    description: "Create a new vector-enabled collection in the database with customizable embedding model and provider.",
     inputSchema: {
       type: "object",
       properties: {
@@ -58,21 +58,34 @@ export const tools: Tool[] = [
           type: "string",
           description: "Name of the collection to create",
         },
-        vector: {
-          type: "boolean",
-          description: "Whether to create a vector collection",
-          default: true,
+        modelName: {
+          type: "string",
+          description: "The name of the embedding model to use (e.g., 'text-embedding-ada-003')",
+          default: "text-embedding-ada-003",
         },
-        dimension: {
+        dimensions: {
           type: "number",
           description:
-            "The dimensions of the vector collection, if vector is true",
+            "The dimensions of the vector space for the collection, based on the embedding model used",
           default: 1536,
         },
+        apiKeyName: {
+          type: "string",
+          description:
+            "The name of the API key stored in Astra DB for authenticating with the embedding provider",
+          default: "default",
+        },
+        provider: {
+          type: "string",
+          description:
+            "The embedding service provider (e.g., 'openai', 'nvidia'). Determines how embeddings are generated.",
+          default: "openai",
+        },
       },
-      required: ["collectionName"],
+      required: ["collectionName", "modelName", "dimensions", "apiKeyName", "provider"],
     },
   },
+  
   {
     name: "UpdateCollection",
     description: "Update an existing collection in the database",
