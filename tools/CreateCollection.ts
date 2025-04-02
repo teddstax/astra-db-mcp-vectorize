@@ -12,27 +12,69 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// import { db } from "../util/db.js";
+
+// export async function CreateCollection(params: {
+//   collectionName: string;
+//   vector?: boolean;
+//   dimension?: number;
+// }) {
+//   const { collectionName, vector = true, dimension = 1536 } = params;
+
+//   if (vector) {
+//     await db.createCollection(collectionName, {
+//       vector: {
+//         dimension: dimension,
+//       },
+//     });
+//   } else {
+//     await db.createCollection(collectionName);
+//   }
+
+//   return {
+//     success: true,
+//     message: `Collection '${collectionName}' created successfully`,
+//   };
+// }
+
 import { db } from "../util/db.js";
+import { Collection } from "@datastax/astra-db-ts";
 
-export async function CreateCollection(params: {
+type CreateCollectionArgs = {
   collectionName: string;
-  vector?: boolean;
-  dimension?: number;
-}) {
-  const { collectionName, vector = true, dimension = 1536 } = params;
+  modelName: string; // e.g., "text-embedding-ada-002"
+  dimensions: number; // e.g., 1536 for ada-002
+  apiKeyName: string; // Name of the OpenAI API key in Astra DB
+  provider: string; 
+};
 
-  if (vector) {
-    await db.createCollection(collectionName, {
+export async function createCollection({
+  collectionName,
+  modelName,
+  dimensions,
+  apiKeyName,
+  provider,
+}: CreateCollectionArgs): Promise<Collection> {
+  try {
+    const collection = await db.createCollection(collectionName, {
       vector: {
-        dimension: dimension,
+        dimension: dimensions, // Set the correct number of dimensions for the model
+        metric: "COSINE", // Default similarity metric (can also be DOT_PRODUCT or EUCLIDEAN)
+        service: {
+          provider, // Specify OpenAI as the provider
+          modelName, // Model name (e.g., "text-embedding-ada-002")
+          authentication: {
+            providerKey: apiKeyName, // Name of the API key in Astra DB
+          },
+        },
       },
     });
-  } else {
-    await db.createCollection(collectionName);
-  }
 
-  return {
-    success: true,
-    message: `Collection '${collectionName}' created successfully`,
-  };
+    console.log(`Successfully created collection: ${collection.collectionName}`);
+    return collection;
+  } catch (error) {
+    console.error(`Failed to create collection: ${error.message}`);
+    throw error;
+  }
 }
+
