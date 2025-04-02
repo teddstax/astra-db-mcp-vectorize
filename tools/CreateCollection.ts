@@ -59,7 +59,7 @@ export async function CreateCollection({
     const collection = await db.createCollection(collectionName, {
       vector: {
         dimension: dimensions, // Set the correct number of dimensions for the model
-        metric: "COSINE", // Default similarity metric (can also be DOT_PRODUCT or EUCLIDEAN)
+        metric: "cosine", // Default similarity metric (can also be DOT_PRODUCT or EUCLIDEAN)
         service: {
           provider, // Specify OpenAI as the provider
           modelName, // Model name (e.g., "text-embedding-ada-002")
