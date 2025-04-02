@@ -48,7 +48,7 @@ type CreateCollectionArgs = {
   provider: string; 
 };
 
-export async function createCollection({
+export async function CreateCollection({
   collectionName,
   modelName,
   dimensions,
