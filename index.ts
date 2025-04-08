@@ -86,7 +86,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         dimension: args.dimension,
         apiKeyName: args.apiKeyName,
         provider: args.provider,
-        metric: args.metric,
       });
       
         const createResult = await CreateCollection({
@@ -95,7 +94,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           dimension: args.dimension as number | undefined,
           apiKeyName: args.apiKeyName as string,
           provider: args.provider as string,
-          metric: args.metric as "cosine" | "euclidean" | "dot_product",
         });
         return {
           content: [
