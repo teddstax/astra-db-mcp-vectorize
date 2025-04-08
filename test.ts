@@ -6,5 +6,4 @@ await CreateCollection({
     dimensions: 1536,
     apiKeyName: "test",
     provider: "openai",
-    metric: "euclidean",
   });

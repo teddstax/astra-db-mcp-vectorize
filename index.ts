@@ -61,9 +61,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const toolName = request.params.name as ToolName;
-  const args = typeof request.params.arguments === 'string' 
-  ? JSON.parse(request.params.arguments)
-  : request.params.arguments || {};
+  const args = request.params.arguments || {};
 
   try {
     switch (toolName) {
@@ -79,21 +77,14 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         };
 
       case "CreateCollection":
-
-      console.log("CreateCollection args:", {
-        collectionName: args.collectionName,
-        vector: args.vector,
-        dimension: args.dimension,
-        apiKeyName: args.apiKeyName,
-        provider: args.provider,
-      });
-      
+    
         const createResult = await CreateCollection({
           collectionName: args.collectionName as string,
-          vector: args.vector as boolean | undefined,
-          dimension: args.dimension as number | undefined,
+          dimensions: args.dimensions as number ,
           apiKeyName: args.apiKeyName as string,
           provider: args.provider as string,
+          modelName: args.modelName as string,
+
         });
         return {
           content: [
