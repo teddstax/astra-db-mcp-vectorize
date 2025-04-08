@@ -90,7 +90,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           content: [
             {
               type: "text",
-              text: createResult.message,
+              text: `Collection '${createResult.collectionName}' created successfully`,
             },
           ],
         };
