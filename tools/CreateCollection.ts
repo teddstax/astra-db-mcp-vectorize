@@ -57,6 +57,14 @@ export async function CreateCollection({
   provider,
   metric,
 }: CreateCollectionArgs): Promise<Collection> {
+  console.log("CreateCollection args:", {
+    collectionName,
+    modelName,
+    dimensions,
+    apiKeyName,
+    provider,
+    metric,
+  });
   try {
     const collection = await db.createCollection(collectionName, {
       vector: {
