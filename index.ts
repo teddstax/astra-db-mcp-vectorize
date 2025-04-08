@@ -61,7 +61,9 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const toolName = request.params.name as ToolName;
-  const args = request.params.arguments || {};
+  const args = typeof request.params.arguments === 'string' 
+  ? JSON.parse(request.params.arguments)
+  : request.params.arguments || {};
 
   try {
     switch (toolName) {

@@ -46,7 +46,7 @@ type CreateCollectionArgs = {
   dimensions: number; // e.g., 1536 for ada-002
   apiKeyName: string; // Name of the OpenAI API key in Astra DB
   provider: string; 
-  metric: string;
+  metric: "cosine" | "euclidean" | "dot_product";
 };
 
 export async function CreateCollection({
@@ -61,7 +61,7 @@ export async function CreateCollection({
     const collection = await db.createCollection(collectionName, {
       vector: {
         dimension: dimensions, // Set the correct number of dimensions for the model
-        metric: metric as "cosine" | "euclidean" | "dot_product", // Default similarity metric (can also be DOT_PRODUCT or EUCLIDEAN)
+        metric, // Default similarity metric (can also be DOT_PRODUCT or EUCLIDEAN)
         service: {
           provider, // Specify OpenAI as the provider
           modelName, // Model name (e.g., "text-embedding-ada-002")
