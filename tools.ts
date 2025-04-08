@@ -81,13 +81,8 @@ export const tools: Tool[] = [
             "The embedding service provider (e.g., 'openai', 'nvidia'). Determines how embeddings are generated.",
           default: "openai",
         },
-        metric: {
-          type: "string",
-          description: "The metric to use for the collection",
-          default: "cosine",
-        },
       },
-      required: ["collectionName", "modelName", "dimensions", "apiKeyName", "provider", "metric"],
+      required: ["collectionName", "modelName", "dimensions", "apiKeyName", "provider"],
     },
   },
   
