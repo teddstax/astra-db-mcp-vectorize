@@ -85,7 +85,6 @@ export const tools: Tool[] = [
           type: "string",
           description: "The metric to use for the collection",
           default: "cosine",
-          enum: ["cosine", "euclidean", "dot_product"],
         },
       },
       required: ["collectionName", "modelName", "dimensions", "apiKeyName", "provider", "metric"],
